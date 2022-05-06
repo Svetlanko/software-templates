@@ -1,0 +1,75 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: github-merge-request
+  title: GitHub New Repo Action template
+  description: scaffolder v1beta2 template demo creating a new repository
+spec:
+  owner: backstage/techdocs-core
+  type: service
+
+  parameters:
+    - title: Fill in some steps
+      required:
+        - name
+      properties:
+        name:
+          title: Name
+          type: string
+          description: Unique name of the component
+          ui:autofocus: true
+          ui:options:
+            rows: 5
+        description:
+          title: Description
+          type: string
+          description: Description of the component
+#        github_project:
+#          title: GitHub Project Slug or ID
+#          type: string
+#          description: 'Provide your GitHub Project slug "github-com/www-github-com" or Project ID "7764"'
+#        targetPath:
+#          title: Target Path in repo
+#          type: string
+#          description: Name of the directory to create in the repository
+#        branchName:
+#          title: Destination Branch Name
+#          type: string
+#          description: Name of the branch to create in the repository
+    - title: Choose a location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  steps:
+    - id: template
+      name: Fetch Skeleton + Template
+      action: fetch:template
+      input:
+        url: ./template
+#        targetPath: ${{ parameters.targetPath }}
+        values:
+          name: ${{parameters.name}}
+    - id: publish
+      name: Publish
+      action: publish:github
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        repoVisibility: private
+        title: Creating catalog-info.yaml ${{ parameters.name }} for backstage
+        description: |
+          # New project: ${{ parameters.name }}
+
+          ${{ parameters.description if parameters.description }}
+
+  output:
+    links: 
+      - url: ${{ steps.publish.output.repoContentsUrl }}
+        text: 'Go to GitHub repo'
