@@ -49,10 +49,11 @@ spec:
       action: publish:github
       input:
         repoUrl: ${{ parameters.repoUrl }}
-        repoVisibility: private
+        repoVisibility: public
+        defaultBranch: main
         description: ${{ parameters.description if parameters.description }}
 
   output:
     links: 
-      - url: ${{ steps.publish.output.repoContentsUrl }}
+      - url: ${{ steps.publish.output.remoteUrl }}
         text: 'Go to GitHub repo'
