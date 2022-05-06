@@ -64,10 +64,7 @@ spec:
         repoUrl: ${{ parameters.repoUrl }}
         repoVisibility: private
         title: Creating catalog-info.yaml ${{ parameters.name }} for backstage
-        description: |
-          # New project: ${{ parameters.name }}
-
-          ${{ parameters.description if parameters.description }}
+        description: New repo ${{ parameters.name }} ${{ parameters.description if parameters.description }}
 
   output:
     links: 
